@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('article');
       card.classList.add('card', 'service-card');
       card.innerHTML = `
-        <img src="${service.imageUrl}" alt="${service.name}">
+        <img src="${service.imageUrl}" alt="Professional ${service.name} service - luxury salon treatment" loading="lazy" style="background-color: #f3f4f6;" onerror="this.style.backgroundColor='#f9fafb'; this.alt='Image unavailable';">
         <h3>${service.name}</h3>
         <div class="details">
           <span class="service-price">$${service.price}</span>
@@ -32,8 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('article');
       card.classList.add('card', 'product-card');
       card.innerHTML = `
-        <img src="${product.imageUrl}" alt="${product.name}">
+        <img src="${product.imageUrl}" alt="Artisanal ${product.name} - handcrafted organic soap for luxury skincare" loading="lazy" style="background-color: #f3f4f6;" onerror="this.style.backgroundColor='#f9fafb'; this.alt='Image unavailable';">
         <h3>${product.name}</h3>
+        <div class="product-price">$${product.price}</div>
+        <a href="shop.html" class="btn btn-primary">Shop Now</a>
       `;
       productCardsContainer.appendChild(card);
     });

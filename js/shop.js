@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const productCard = document.createElement('article');
       productCard.classList.add('card', 'product-card');
       productCard.innerHTML = `
-        <img src="${product.imageUrl}" alt="${product.name}">
+        <img src="${product.imageUrl}" alt="Artisanal ${product.name} - handcrafted organic soap for luxury skincare" loading="lazy" style="background-color: #f3f4f6;" onerror="this.style.backgroundColor='#f9fafb'; this.alt='Image unavailable';">
         <h3>${product.name}</h3>
         <div class="product-price">$${product.price}</div>
         <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}">
@@ -115,25 +115,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Loading state functions
+  function showButtonLoading(button, originalText) {
+    button.disabled = true;
+    button.innerHTML = `
+      <span class="spinner">⏳</span> 
+      ${originalText === 'Add to Cart' ? 'Adding...' : originalText === 'Checkout' ? 'Processing...' : 'Loading...'}
+    `;
+  }
+
+  function hideButtonLoading(button, originalText) {
+    button.disabled = false;
+    button.innerHTML = originalText;
+  }
+
   // --- CART FUNCTIONALITY ---
   function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-    const existingItem = cart.find(item => item.id === productId);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1
-      });
-    }
+    // Find the button that was clicked
+    const button = document.querySelector(`[data-product-id="${productId}"]`);
+    const originalText = button.innerHTML;
+    
+    showButtonLoading(button, 'Add to Cart');
 
-    updateCartDisplay();
-    saveCartToStorage();
+    // Simulate brief loading for better UX
+    setTimeout(() => {
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: 1
+        });
+      }
+
+      updateCartDisplay();
+      saveCartToStorage();
+      hideButtonLoading(button, originalText);
+    }, 300);
   }
 
   function removeFromCart(productId) {
@@ -210,20 +234,38 @@ document.addEventListener('DOMContentLoaded', () => {
   checkoutBtn.addEventListener('click', () => {
     if (cart.length === 0) return;
     
-    const total = getCartTotal();
-    let pointsMessage = '';
+    const originalText = 'Checkout';
+    showButtonLoading(checkoutBtn, originalText);
     
-    // Add points to member account if applicable
-    if (currentMember && total > 0) {
-      const points = membershipSystem.calculatePurchasePoints(total, currentMember.level);
-      membershipSystem.addPoints(currentMember.membershipNumber, points, 'purchase');
-      pointsMessage = `\n\nYou earned ${points} points! Your new balance: ${currentMember.points + points} points.`;
-    }
-    
-    alert(`Thank you for your purchase!\nTotal: ${cartTotalPrice.textContent}\nItems: ${cart.length}${pointsMessage}`);
-    cart = [];
-    updateCartDisplay();
-    saveCartToStorage();
+    // Simulate checkout processing
+    setTimeout(() => {
+      try {
+        const total = getCartTotal();
+        let pointsMessage = '';
+        
+        // Add points to member account if applicable
+        if (currentMember && currentMember.id && total > 0) {
+          const points = membershipSystem.calculatePurchasePoints(total, currentMember.level);
+          const updatedMember = membershipSystem.addPoints(currentMember.id, points, 'purchase');
+          if (updatedMember) {
+            pointsMessage = `\n\nYou earned ${points} points! Your new balance: ${updatedMember.points} points.`;
+            // Update currentMember reference
+            currentMember.points = updatedMember.points;
+            currentMember.level = updatedMember.level;
+          }
+        }
+        
+        alert(`Thank you for your purchase!\nTotal: ${cartTotalPrice.textContent}\nItems: ${cart.length}${pointsMessage}`);
+        cart = [];
+        updateCartDisplay();
+        saveCartToStorage();
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('There was an error processing your order. Please try again.');
+      } finally {
+        hideButtonLoading(checkoutBtn, originalText);
+      }
+    }, 800);
   });
 
   // Add membership validation event listener
