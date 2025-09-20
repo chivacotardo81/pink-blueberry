@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Blueberry Admin Login</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🫐</text></svg>">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #ec4899, #3b82f6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .login-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .logo { font-size: 4rem; margin-bottom: 1rem; }
+        h1 { color: #1e293b; margin-bottom: 0.5rem; font-size: 1.75rem; }
+        .subtitle { color: #64748b; margin-bottom: 2rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        .btn {
+            background: linear-gradient(135deg, #ec4899, #3b82f6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .auth-note {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">🫐</div>
+        <h1>Pink Blueberry</h1>
+        <div class="subtitle">Administration Panel</div>
+        <p>Access to Pink Blueberry Salon Administration Panel</p>
+        <p class="auth-note">
+            🔒 This site is protected with HTTP Basic Authentication.<br>
+            Your browser will automatically request credentials.
+        </p>
+        <div class="credentials">
+            <p><strong>Username:</strong> admin</p>
+            <p><strong>Password:</strong> pinkblueberry2025</p>
+        </div>
+        <a href="dashboard.html" class="login-btn">Access Dashboard</a>
+    </div>
+</body>
+</html>

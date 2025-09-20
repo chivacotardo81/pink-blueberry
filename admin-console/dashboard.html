@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Blueberry Admin Console</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><text y='32' font-size='32'>🫐</text></svg>">
+</head>
+<body>
+    <!-- Header con navegación -->
+    <header class="admin-header">
+        <div class="header-brand">
+            <span class="logo">🫐</span>
+            <h1>Pink Blueberry Admin</h1>
+        </div>
+        <nav class="main-nav">
+            <button onclick="showSection('dashboard')" class="nav-btn active" data-section="dashboard">
+                📊 Dashboard
+            </button>
+            <button onclick="showSection('catalogs')" class="nav-btn" data-section="catalogs">
+                📚 Catalogs
+            </button>
+            <button onclick="showSection('customers')" class="nav-btn" data-section="customers">
+                👥 Customers
+            </button>
+            <button onclick="showSection('bookings')" class="nav-btn" data-section="bookings">
+                📅 Bookings
+            </button>
+            <button onclick="goToMainSite()" class="nav-btn external">
+                🌐 Main Site
+            </button>
+        </nav>
+    </header>
+
+    <!-- Sección Dashboard -->
+    <section id="dashboard" class="section active">
+        <div class="section-title">
+            <h2>General Dashboard</h2>
+            <span class="last-update">Last Updated: <span id="lastUpdate"></span></span>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <h3>Today's Bookings</h3>
+                    <div class="stat-number" id="todayBookings">8</div>
+                    <div class="stat-change positive">+2 vs yesterday</div>
+                </div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">💰</div>
+                <div class="stat-content">
+                    <h3>Today's Revenue</h3>
+                    <div class="stat-number" id="todayRevenue">$1,250</div>
+                    <div class="stat-change positive">+15%</div>
+                </div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">👥</div>
+                <div class="stat-content">
+                    <h3>Total Customers</h3>
+                    <div class="stat-number" id="totalCustomers">156</div>
+                    <div class="stat-change positive">+3 new</div>
+                </div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">📦</div>
+                <div class="stat-content">
+                    <h3>Low Stock</h3>
+                    <div class="stat-number" id="lowStock">3</div>
+                    <div class="stat-change">products</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div id="recentActivities"></div>
+            </div>
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <button onclick="quickAddBooking()" class="action-btn">
+                        <span>📅</span> New Booking
+                    </button>
+                    <button onclick="quickAddCustomer()" class="action-btn">
+                        <span>👤</span> New Customer
+                    </button>
+                    <button onclick="quickUpdateStock()" class="action-btn">
+                        <span>📦</span> Update Stock
+                    </button>
+                    <button onclick="showSection('catalogs')" class="action-btn">
+                        <span>📚</span> View Catalogs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Catálogos -->
+    <section id="catalogs" class="section">
+        <div class="section-header">
+            <h2>Catalog Management</h2>
+            <div class="header-actions">
+                <button onclick="addService()" class="btn-primary">+ Service</button>
+                <button onclick="addProduct()" class="btn-primary">+ Product</button>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button onclick="showTab('services')" class="tab-btn active" data-tab="services">
+                💇‍♀️ Services (6)
+            </button>
+            <button onclick="showTab('products')" class="tab-btn" data-tab="products">
+                🧴 Products (12)
+            </button>
+        </div>
+
+        <div id="services-tab" class="tab-content active">
+            <div class="catalog-filters">
+                <select id="service-filter" onchange="filterServices()">
+                    <option value="all">All categories</option>
+                    <option value="cuts">Cuts</option>
+                    <option value="color">Color</option>
+                    <option value="treatments">Treatments</option>
+                    <option value="styling">Styling</option>
+                </select>
+                <input type="text" id="service-search" placeholder="Search service..." onkeyup="searchServices()">
+            </div>
+            <div id="services-grid" class="items-grid"></div>
+        </div>
+
+        <div id="products-tab" class="tab-content">
+            <div class="catalog-filters">
+                <select id="product-filter" onchange="filterProducts()">
+                    <option value="all">All categories</option>
+                    <option value="Hair Care">Hair Care</option>
+                    <option value="Organic Soap">Organic Soap</option>
+                </select>
+                <select id="stock-filter" onchange="filterProducts()">
+                    <option value="all">All stock</option>
+                    <option value="low">Low stock</option>
+                    <option value="normal">Normal stock</option>
+                </select>
+            </div>
+            <div id="products-grid" class="items-grid"></div>
+        </div>
+    </section>
+
+    <!-- Sección Clientes -->
+    <section id="customers" class="section">
+        <div class="section-header">
+            <h2>Customer Base</h2>
+            <div class="header-actions">
+                <input type="text" id="customer-search" placeholder="Search customer..." onkeyup="searchCustomers()">
+                <select id="customer-segment-filter" onchange="filterCustomers()">
+                    <option value="all">All segments</option>
+                    <option value="new">New</option>
+                    <option value="regular">Regular</option>
+                    <option value="vip">VIP</option>
+                    <option value="at_risk">At Risk</option>
+                </select>
+                <button onclick="addCustomer()" class="btn-primary">+ Customer</button>
+            </div>
+        </div>
+        
+        <div class="customer-stats">
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="newCustomers">8</span>
+                <span class="mini-stat-label">New</span>
+            </div>
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="regularCustomers">89</span>
+                <span class="mini-stat-label">Regular</span>
+            </div>
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="vipCustomers">23</span>
+                <span class="mini-stat-label">VIP</span>
+            </div>
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="atRiskCustomers">5</span>
+                <span class="mini-stat-label">At Risk</span>
+            </div>
+        </div>
+        
+        <div id="customers-grid" class="items-grid"></div>
+    </section>
+
+    <!-- Sección Reservas -->
+    <section id="bookings" class="section">
+        <div class="section-header">
+            <h2>Booking Management</h2>
+            <div class="header-actions">
+                <input type="date" id="booking-date-filter" onchange="filterBookings()">
+                <select id="booking-status-filter" onchange="filterBookings()">
+                    <option value="all">All statuses</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="no_show">No Show</option>
+                </select>
+                <select id="booking-stylist-filter" onchange="filterBookings()">
+                    <option value="all">All stylists</option>
+                    <option value="Maria Garcia">Maria Garcia</option>
+                    <option value="Sarah Mitchell">Sarah Mitchell</option>
+                    <option value="James Chen">James Chen</option>
+                </select>
+                <button onclick="addBooking()" class="btn-primary">+ Booking</button>
+            </div>
+        </div>
+        
+        <div class="booking-stats">
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="todayBookingsDetail">8</span>
+                <span class="mini-stat-label">Today</span>
+            </div>
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="confirmedBookings">12</span>
+                <span class="mini-stat-label">Confirmed</span>
+            </div>
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="completedBookings">5</span>
+                <span class="mini-stat-label">Completed</span>
+            </div>
+            <div class="mini-stat">
+                <span class="mini-stat-number" id="pendingBookings">3</span>
+                <span class="mini-stat-label">Pending</span>
+            </div>
+        </div>
+        
+        <div id="bookings-grid" class="items-grid"></div>
+    </section>
+
+    <!-- Modal para formularios -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

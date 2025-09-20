@@ -1,0 +1,36 @@
+AuthType Basic
+AuthName "Pink Blueberry Admin Console - Restricted Access"
+AuthUserFile /Users/chiva/Documents/Windsurf-Projects/pink-blueberry/admin-console/.htpasswd
+Require valid-user
+
+# Security headers
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Cache control for admin files
+<FilesMatch "\.(html|css|js)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</FilesMatch>
+
+# Deny access to sensitive files
+<Files ".htpasswd">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files ".htaccess">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Custom error pages
+ErrorDocument 401 "<!DOCTYPE html><html><head><title>Acceso Denegado</title><style>body{font-family:Arial,sans-serif;text-align:center;padding:50px;background:#f8fafc;color:#334155;}h1{color:#ef4444;}</style></head><body><h1>🔒 Acceso Denegado</h1><p>Se requieren credenciales válidas para acceder al Panel de Administración de Pink Blueberry.</p><p><a href='/'>← Volver al sitio principal</a></p></body></html>"
+
+ErrorDocument 403 "<!DOCTYPE html><html><head><title>Prohibido</title><style>body{font-family:Arial,sans-serif;text-align:center;padding:50px;background:#f8fafc;color:#334155;}h1{color:#ef4444;}</style></head><body><h1>🚫 Acceso Prohibido</h1><p>No tienes permisos para acceder a este recurso.</p><p><a href='/'>← Volver al sitio principal</a></p></body></html>"
+
+# Redirect root to dashboard
+DirectoryIndex index.html dashboard.html
