@@ -1,8 +1,66 @@
-// Generate unique booking reference number
+// Booking form functionality
+let selectedService = null;
+let selectedStylist = null;
+let selectedDate = null;
+let selectedTime = null;
+let currentMember = null;
+
+// Generate unique booking reference
 function generateBookingReference() {
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).substr(2, 4).toUpperCase();
   return `PB-${timestamp}${random}`;
+}
+
+// Membership validation functionality
+function validateMembership() {
+  const membershipInput = document.getElementById('membership-number');
+  const membershipNumber = membershipInput.value.trim().toUpperCase();
+  const errorElement = document.getElementById('membership-error');
+  const successElement = document.getElementById('membership-success');
+  const membershipInfo = document.getElementById('membership-info');
+  const pointsPreview = document.getElementById('points-preview');
+  
+  // Clear previous messages
+  errorElement.textContent = '';
+  successElement.style.display = 'none';
+  membershipInfo.style.display = 'none';
+  pointsPreview.style.display = 'none';
+  
+  if (!membershipNumber) {
+    currentMember = null;
+    updateBookingSummary();
+    return;
+  }
+  
+  // Validate membership
+  const member = membershipSystem.validateMembership(membershipNumber);
+  
+  if (member) {
+    currentMember = member;
+    
+    // Show success message
+    successElement.textContent = `Welcome back, ${member.name}!`;
+    successElement.style.display = 'block';
+    
+    // Show member info
+    document.getElementById('member-name').textContent = member.name;
+    document.getElementById('member-level').textContent = member.level;
+    document.getElementById('member-points').textContent = `${member.points} points`;
+    membershipInfo.style.display = 'block';
+    
+    // Calculate and show points preview
+    if (selectedService) {
+      const points = membershipSystem.calculateBookingPoints(selectedService.price, member.level);
+      document.getElementById('booking-points').textContent = points;
+      pointsPreview.style.display = 'block';
+    }
+  } else {
+    currentMember = null;
+    errorElement.textContent = 'Invalid membership number. Please check and try again.';
+  }
+  
+  updateBookingSummary();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -146,48 +204,65 @@ document.addEventListener('DOMContentLoaded', () => {
     let isValid = true;
     document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
 
-    if (!bookingState.service) { alert('Please select a service.'); isValid = false; }
-    if (!bookingState.date) { alert('Please select a date.'); isValid = false; }
-    if (!bookingState.time) { alert('Please select a time.'); isValid = false; }
+    console.log('Validating booking state:', bookingState);
+
+    if (!bookingState.service) { 
+      console.log('Service validation failed');
+      alert('Please select a service.'); 
+      isValid = false; 
+    }
+    if (!bookingState.date) { 
+      console.log('Date validation failed');
+      alert('Please select a date.'); 
+      isValid = false; 
+    }
+    if (!bookingState.time) { 
+      console.log('Time validation failed');
+      alert('Please select a time.'); 
+      isValid = false; 
+    }
 
     if (!nameInput.value.trim()) {
+      console.log('Name validation failed');
       document.getElementById('name-error').textContent = 'Name is required.';
       isValid = false;
     }
     if (!emailInput.value.trim() || !/\S+@\S+\.\S+/.test(emailInput.value)) {
+      console.log('Email validation failed');
       document.getElementById('email-error').textContent = 'A valid email is required.';
       isValid = false;
     }
     if (!phoneInput.value.trim()) {
+      console.log('Phone validation failed');
       document.getElementById('phone-error').textContent = 'Phone number is required.';
       isValid = false;
     } else if (!/^[\d\s\-\(\)]+$/.test(phoneInput.value.trim())) {
+      console.log('Phone format validation failed');
       document.getElementById('phone-error').textContent = 'Please enter a valid phone number.';
       isValid = false;
     }
     
+    console.log('Validation result:', isValid);
     return isValid;
   }
 
-  // --- ATTACH EVENT LISTENERS ---
-  prevMonthBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar();
-  });
-
-  nextMonthBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar();
-  });
-
+  // Event listeners
   serviceSelect.addEventListener('change', (e) => {
     const selectedId = parseInt(e.target.value, 10);
-    bookingState.service = services.find(s => s.id === selectedId) || null;
+    selectedService = services.find(s => s.id === selectedId) || null;
+    bookingState.service = selectedService;
     updateSummary();
+    
+    // Update points preview if member is validated
+    if (currentMember && selectedService) {
+      const points = membershipSystem.calculateBookingPoints(selectedService.price, currentMember.level);
+      document.getElementById('booking-points').textContent = points;
+      document.getElementById('points-preview').style.display = 'block';
+    }
   });
 
   timeslotSelect.addEventListener('change', (e) => {
-    bookingState.time = e.target.value || null;
+    bookingState.time = e.target.value;
     updateSummary();
   });
 
@@ -197,8 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSummary();
   });
 
+  document.getElementById('validate-membership-btn').addEventListener('click', validateMembership);
+
   confirmBtn.addEventListener('click', () => {
+    console.log('Confirm button clicked');
+    console.log('Current bookingState:', bookingState);
+    
     if (handleFormValidation()) {
+      console.log('Validation passed');
       bookingState.customer.name = nameInput.value;
       bookingState.customer.email = emailInput.value;
       bookingState.customer.phone = phoneInput.value;
@@ -206,8 +287,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const bookingReference = generateBookingReference();
       bookingState.reference = bookingReference;
       
+      // Add points to member account if applicable
+      let pointsMessage = '';
+      if (currentMember && currentMember.membershipNumber && bookingState.service) {
+        const points = membershipSystem.calculateBookingPoints(bookingState.service.price, currentMember.level);
+        membershipSystem.addPoints(currentMember.membershipNumber, points, 'booking');
+        pointsMessage = `\n\nYou earned ${points} points! Your new balance: ${currentMember.points + points} points.`;
+      }
+      
       console.log('Booking Confirmed:', bookingState);
-      alert(`Thank you! Your booking has been confirmed.\n\nBooking Reference: ${bookingReference}\n\nPlease save this reference for your records.`);
+      alert(`Thank you! Your booking has been confirmed.\n\nBooking Reference: ${bookingReference}${pointsMessage}\n\nPlease save this reference for your records.`);
+    } else {
+      console.log('Validation failed');
     }
   });
 
