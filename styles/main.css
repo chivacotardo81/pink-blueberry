@@ -381,12 +381,14 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Footer */
 .main-footer {
-  background-color: var(--dark-gray);
-  color: var(--light-gray);
+  background-color: #333;
+  color: white;
   text-align: center;
-  padding: 48px 24px;
+  padding: 2rem;
+  margin-top: 4rem;
 }
 
 .main-footer p {

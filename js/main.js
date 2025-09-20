@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const serviceCardsContainer = document.getElementById('service-cards-preview');
   const productCardsContainer = document.getElementById('product-cards-preview');
 
+
   // Function to render service preview cards
   function renderServicePreviews() {
     if (!serviceCardsContainer) return;
