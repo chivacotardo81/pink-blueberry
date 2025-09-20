@@ -1,3 +1,10 @@
+// Generate unique booking reference number
+function generateBookingReference() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substr(2, 4).toUpperCase();
+  return `PB-${timestamp}${random}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // --- CACHE DOM ELEMENTS ---
   const serviceSelect = document.getElementById('service-select');
@@ -151,6 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('email-error').textContent = 'A valid email is required.';
       isValid = false;
     }
+    if (!phoneInput.value.trim()) {
+      document.getElementById('phone-error').textContent = 'Phone number is required.';
+      isValid = false;
+    } else if (!/^[\d\s\-\(\)]+$/.test(phoneInput.value.trim())) {
+      document.getElementById('phone-error').textContent = 'Please enter a valid phone number.';
+      isValid = false;
+    }
     
     return isValid;
   }
@@ -188,8 +202,12 @@ document.addEventListener('DOMContentLoaded', () => {
       bookingState.customer.name = nameInput.value;
       bookingState.customer.email = emailInput.value;
       bookingState.customer.phone = phoneInput.value;
+      
+      const bookingReference = generateBookingReference();
+      bookingState.reference = bookingReference;
+      
       console.log('Booking Confirmed:', bookingState);
-      alert('Thank you! Your booking has been confirmed.');
+      alert(`Thank you! Your booking has been confirmed.\n\nBooking Reference: ${bookingReference}\n\nPlease save this reference for your records.`);
     }
   });
 

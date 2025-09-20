@@ -29,21 +29,33 @@ const products = [
   {
     id: 1,
     name: "Lavender & Oatmeal Calming Bar",
+    price: 12,
+    category: "Organic Soap",
+    description: "Handcrafted calming soap",
     imageUrl: "images/lavander_oatmilk.png"
   },
   {
     id: 2,
     name: "Charcoal & Tea Tree Detox Soap",
+    price: 14,
+    category: "Organic Soap",
+    description: "Deep cleansing detox soap",
     imageUrl: "images/Charcoal_&_Tea_Tree_Detox_Soap.png"
   },
   {
     id: 3,
     name: "Citrus & Honey Brightening Soap",
+    price: 13,
+    category: "Organic Soap",
+    description: "Brightening citrus soap",
     imageUrl: "images/Citrus_&_Honey_Brightening_Soap.png"
   },
   {
     id: 4,
     name: "Rose & Shea Butter Moisturizing Bar",
+    price: 15,
+    category: "Organic Soap",
+    description: "Moisturizing rose soap",
     imageUrl: "images/Rose_&_Shea_Butter_Moisturizing_Bar.png"
   }
 ];

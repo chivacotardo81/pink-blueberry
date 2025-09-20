@@ -1,3 +1,24 @@
+// Cart persistence functions
+function saveCartToStorage() {
+  try {
+    localStorage.setItem('pinkblueberry_cart', JSON.stringify(cart));
+  } catch (error) {
+    console.warn('Could not save cart to storage:', error);
+  }
+}
+
+function loadCartFromStorage() {
+  try {
+    const savedCart = localStorage.getItem('pinkblueberry_cart');
+    if (savedCart) {
+      cart = JSON.parse(savedCart);
+    }
+  } catch (error) {
+    console.warn('Could not load cart from storage:', error);
+    cart = []; // Reset to empty cart if corrupted
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // --- CACHE DOM ELEMENTS ---
   const productsContainer = document.getElementById('products-container');
@@ -19,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       productCard.innerHTML = `
         <img src="${product.imageUrl}" alt="${product.name}">
         <h3>${product.name}</h3>
-        <div class="product-price">$12</div>
+        <div class="product-price">$${product.price}</div>
         <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}">
           Add to Cart
         </button>
@@ -48,17 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
       cart.push({
         id: product.id,
         name: product.name,
-        price: 12, // Fixed price for all soaps
+        price: product.price,
         quantity: 1
       });
     }
 
     updateCartDisplay();
+    saveCartToStorage();
   }
 
   function removeFromCart(productId) {
     cart = cart.filter(item => item.id !== productId);
     updateCartDisplay();
+    saveCartToStorage();
   }
 
   function updateQuantity(productId, newQuantity) {
@@ -69,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         item.quantity = newQuantity;
         updateCartDisplay();
+        saveCartToStorage();
       }
     }
   }
@@ -120,9 +144,11 @@ document.addEventListener('DOMContentLoaded', () => {
     alert(`Thank you for your purchase!\nTotal: ${cartTotalPrice.textContent}\nItems: ${cart.length}`);
     cart = [];
     updateCartDisplay();
+    saveCartToStorage();
   });
 
   // --- INITIALIZATION ---
+  loadCartFromStorage();
   renderProducts();
   updateCartDisplay();
 });

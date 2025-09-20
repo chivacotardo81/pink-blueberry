@@ -14,9 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <img src="${service.imageUrl}" alt="${service.name}">
         <h3>${service.name}</h3>
         <div class="details">
+          <span class="service-price">$${service.price}</span>
           <span>${service.duration} min</span>
         </div>
         <p>${service.description}</p>
+        <a href="booking.html" class="btn btn-primary">Book Now</a>
       `;
       serviceCardsContainer.appendChild(card);
     });
