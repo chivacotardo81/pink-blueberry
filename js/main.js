@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderProductPreviews() {
     if (!productCardsContainer) return;
     productCardsContainer.innerHTML = ''; // Clear existing cards
-    products.slice(0, 3).forEach(product => {
+    products.slice(0, 4).forEach(product => {
       const card = document.createElement('article');
       card.classList.add('card', 'product-card');
       card.innerHTML = `

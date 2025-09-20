@@ -40,6 +40,11 @@ const products = [
     id: 3,
     name: "Citrus & Honey Brightening Soap",
     imageUrl: "images/Citrus_&_Honey_Brightening_Soap.png"
+  },
+  {
+    id: 4,
+    name: "Rose & Shea Butter Moisturizing Bar",
+    imageUrl: "images/Rose_&_Shea_Butter_Moisturizing_Bar.png"
   }
 ];
 
