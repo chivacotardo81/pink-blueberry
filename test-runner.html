@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Runner - Pink Blueberry Salon</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .test-controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background-color: #ec4899;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 0 10px;
+    }
+    .btn:hover {
+      background-color: #d946ef;
+    }
+    .console-output {
+      background-color: #1a1a1a;
+      color: #00ff00;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      border: 2px solid #333;
+    }
+    .clear-btn {
+      background-color: #6b7280;
+    }
+    .clear-btn:hover {
+      background-color: #4b5563;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🧪 Pink Blueberry Salon Test Suite</h1>
+    <p>Comprehensive testing for application functionality</p>
+  </div>
+
+  <div class="test-controls">
+    <button class="btn" onclick="runTests()">🚀 Run All Tests</button>
+    <button class="btn clear-btn" onclick="clearConsole()">🗑️ Clear Console</button>
+  </div>
+
+  <div id="console-output" class="console-output">
+    Welcome to the Pink Blueberry Salon Test Runner!
+    Click "Run All Tests" to start testing the application.
+  </div>
+
+  <!-- Load dependencies -->
+  <script src="js/data.js"></script>
+  <script src="js/tests.js"></script>
+
+  <script>
+    // Capture console output and display in our custom console
+    const consoleOutput = document.getElementById('console-output');
+    const originalLog = console.log;
+    
+    console.log = function(...args) {
+      // Call original console.log
+      originalLog.apply(console, args);
+      
+      // Display in our custom console
+      const message = args.join(' ') + '\n';
+      consoleOutput.textContent += message;
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    };
+
+    function runTests() {
+      clearConsole();
+      console.log('Initializing test environment...\n');
+      
+      // Small delay to show initialization
+      setTimeout(() => {
+        runAllTests();
+      }, 500);
+    }
+
+    function clearConsole() {
+      consoleOutput.textContent = '';
+    }
+
+    // Initial message
+    console.log('Test environment ready. Click "Run All Tests" to begin.');
+  </script>
+</body>
+</html>

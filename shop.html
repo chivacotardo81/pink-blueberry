@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop - The Pink Blueberry Salon</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+  <header class="main-header">
+    <nav class="main-nav">
+      <a href="index.html#home">Home</a>
+      <a href="booking.html">Book</a>
+      <a href="shop.html">Shop</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="shop" class="shop-section">
+      <h2 class="section-title">Artisanal Soap Collection</h2>
+      <div class="shop-container">
+        <div class="products-grid">
+          <div id="products-container" class="cards-container">
+            <!-- Product cards will be dynamically inserted here -->
+          </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <div class="cart-container">
+          <div class="cart-summary card">
+            <h3>Shopping Cart</h3>
+            <div id="cart-items">
+              <p class="empty-cart">Your cart is empty</p>
+            </div>
+            <div class="cart-divider"></div>
+            <div class="cart-total">
+              <span>Total</span>
+              <span id="cart-total-price">$0</span>
+            </div>
+            <button id="checkout-btn" class="btn btn-confirm" disabled>Checkout</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact" class="main-footer">
+    <p>Phone: (123) 456-7890</p>
+    <p>Email: contact@pinkblueberry.com</p>
+    <p>Address: 123 Beauty Lane, Style City, ST 12345</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/shop.js"></script>
+</body>
+</html>
